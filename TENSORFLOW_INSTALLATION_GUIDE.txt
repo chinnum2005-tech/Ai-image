@@ -1,0 +1,73 @@
+TENSORFLOW INSTALLATION GUIDE FOR AI IMAGE DETECTION SYSTEM
+==========================================================
+
+PROBLEM:
+You're experiencing the "No such file or directory" error when trying to install TensorFlow due to Windows path length limitations.
+
+SOLUTIONS (in order of recommendation):
+
+1. ENABLE LONG PATH SUPPORT (RECOMMENDED)
+----------------------------------------
+This is the best long-term solution:
+
+Method A: Using Registry Editor (All Windows versions)
+   1. Press Win + R, type "regedit", press Enter
+   2. Navigate to: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem
+   3. Right-click in the right pane > New > DWORD (32-bit) Value
+   4. Name it "LongPathsEnabled"
+   5. Double-click it and set Value data to "1"
+   6. Click OK and restart your computer
+
+Method B: Using Group Policy Editor (Windows Pro/Enterprise)
+   1. Press Win + R, type "gpedit.msc", press Enter
+   2. Navigate to: Computer Configuration > Administrative Templates > System > Filesystem
+   3. Double-click "Enable Win32 long paths"
+   4. Set to "Enabled" and click OK
+   5. Restart your computer
+
+Method C: Using PowerShell (as Administrator)
+   1. Open PowerShell as Administrator
+   2. Run: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1
+   3. Restart your computer
+
+After enabling long paths, install TensorFlow:
+   pip install tensorflow
+
+2. ALTERNATIVE INSTALLATION METHODS
+-----------------------------------
+If you can't enable long paths:
+
+A. Install in User Directory:
+   pip install tensorflow --user
+
+B. Install TensorFlow CPU Version:
+   pip install tensorflow-cpu
+
+C. Create Virtual Environment in Short Path:
+   1. Open Command Prompt as Administrator
+   2. Run: cd C:\
+   3. Run: mkdir tf_env
+   4. Run: cd tf_env
+   5. Run: python -m venv tensorflow
+   6. Run: tensorflow\Scripts\activate
+   7. Run: pip install tensorflow
+
+3. VERIFY INSTALLATION
+----------------------
+After installation, verify TensorFlow works:
+   python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__)"
+
+4. RUN THE AI DETECTION SYSTEM
+------------------------------
+Once TensorFlow is installed:
+   1. Navigate to your AI-Image folder
+   2. Run: python app.py
+   3. In another terminal: cd frontend && npm start
+   4. Open browser to http://localhost:3000
+
+FILES IN YOUR FOLDER THAT ARE READY TO USE:
+- model.h5: Pre-trained AI detection model
+- best_model_optimized.h5: Optimized version of the model
+- All preprocessing and feature extraction scripts
+
+The system will work with ANY image you upload through the web interface, not just images in the dataset folder.
