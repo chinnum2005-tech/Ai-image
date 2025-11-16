@@ -40,7 +40,14 @@ app = Flask(__name__)
 # Configure CORS to allow requests from the frontend
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"],
+        "origins": [
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "http://localhost:4174",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:4174"
+        ],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
@@ -291,8 +298,8 @@ def analyze_image():
                 return jsonify({'error': 'Model not initialized'}), 500
             prediction = model.predict(img, verbose=0)[0][0]
         
-        # Determine result - INVERTED to fix labeling issue
-        is_ai_generated = prediction <= 0.5  # Changed from > to <=
+        # Determine result - temporary inversion until model retrained
+        is_ai_generated = prediction <= 0.5
         confidence = float(1 - prediction) if is_ai_generated else float(prediction)
         
         # Generate feature visualizations
@@ -395,7 +402,7 @@ def analyze_batch():
                             continue
                         prediction = model.predict(img, verbose=0)[0][0]
                     
-                    # Determine result - INVERTED to fix labeling issue
+                    # Determine result - temporary inversion until model retrained
                     is_ai_generated = prediction <= 0.5
                     confidence = float(1 - prediction) if is_ai_generated else float(prediction)
                     
@@ -568,7 +575,7 @@ def upload_and_analyze():
         except Exception as e:
             logger.error(f"Error generating visualizations: {e}")
         
-        # Determine result - INVERTED to fix labeling issue
+        # Determine result - temporary inversion until model retrained
         is_ai_generated = prediction <= 0.5
         confidence = float(1 - prediction) if is_ai_generated else float(prediction)
         
